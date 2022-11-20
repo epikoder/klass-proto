@@ -1,21 +1,29 @@
 import { Button, CircularProgress, TextField } from '@mui/joy'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { AuthBloc, useAuthBloc } from '../bloc/auth.bloc'
 import PasswordInput from '../components/password.component'
 import LayoutApp from '../layout/app.layout'
-import { LoginBloc, useLoginBloc } from './bloc'
+import { LoginBloc, useLoginBloc } from '../bloc/index.bloc'
 
 export default function Home() {
-  const [{ password, username, loading }, { setPassword, setUsername, login }] = useLoginBloc(LoginBloc)
-  const [{ }, { setLogin }] = useAuthBloc(AuthBloc)
+  const [{ password, username, loading }, { setPassword, setUsername, login, setIdle }] = useLoginBloc(LoginBloc)
+  const [{ authenticated }, { setLogin }] = useAuthBloc(AuthBloc)
   const router = useRouter()
+
+  useEffect(() => {
+    if (authenticated) setTimeout(() => {
+      setIdle()
+      router.replace('/dashboard')
+    }, 800)
+  }, [authenticated]);
 
   return <LayoutApp>
     <div className='h-full w-full flex'>
-      <div className='w-[60%] h-full bg-yellow-200'>
+      <div className='hidden md:block w-[60%] h-full bg-yellow-200'>
 
       </div>
-      <div className='w-[40%] flex flex-col justify-center items-center'>
+      <div className='w-full md:w-[40%] flex flex-col justify-center items-center'>
         <div className='space-y-2'>
           <div className='text-center'>
             Login
@@ -26,7 +34,7 @@ export default function Home() {
             onChange={(e) => setUsername(e.target.value)}
           />
           <PasswordInput
-            placeholder='password'
+            placeholder='password (any 5 character)'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -34,7 +42,7 @@ export default function Home() {
             <Button
               disabled={loading || username.length <= 2 || password.length <= 5}
               startDecorator={loading && <CircularProgress size='sm' />}
-              onClick={() => login(router, setLogin)}
+              onClick={() => login(setLogin)}
             >
               Login
             </Button>

@@ -1,3 +1,4 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { TextField, TextFieldProps } from "@mui/joy"
 import { FC, useState } from "react"
 
@@ -8,7 +9,7 @@ const PasswordInput: FC<TextFieldProps> = (props) => {
 		{...props}
 		type={visible ? 'text' : 'password'}
 		endDecorator={<div onClick={toggleVisibility} className='cursor-pointer'>
-			{visible ? 'EYE' : 'EYE OFF'}
+			{visible ? <Visibility/> : <VisibilityOff/>}
 		</div>} />
 }
 

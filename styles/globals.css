@@ -41,3 +41,10 @@ a {
     background: black;
   }
 }
+
+ol, ul {
+  list-style: inherit;
+}
+li {
+  list-style-position: inside;
+}

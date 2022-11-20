@@ -16,6 +16,10 @@ export class AuthBloc extends Cubit<AuthState>{
 		super(new AuthState({ authenticated: false }))
 	}
 	setLogin = (user: User) => this.emit({ user, authenticated: true })
+
+	logout = () => {
+		this.emit(new AuthState({ authenticated: false }))
+	}
 }
 
 export const AuthBlocProvider = new BlacReact([new AuthBloc()])

@@ -5,7 +5,7 @@ const nextConfig = {
   env: {
     MYSQL_DATABASE: "klass",
     MYSQL_USER: "root",
-    MYSQL_PASSWORD: "password"
+    MYSQL_PASSWORD: "beLL1923"
   }
 }
 

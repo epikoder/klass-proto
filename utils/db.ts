@@ -19,6 +19,6 @@ const conn = (function (): mysql.Connection {
 	return _conn
 })
 
-const query = () => util.promisify(conn().query).bind(conn())
+const query = (): (sql: string, ...vars: any) => Promise<unknown> => util.promisify(conn().query).bind(conn())
 export { query }
 export default conn
