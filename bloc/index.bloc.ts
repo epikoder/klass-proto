@@ -35,8 +35,10 @@ export class LoginBloc extends Cubit<LoginState> {
 					['Content-Type']: 'application/json'
 				}
 			})
+			this.setIdle()
 		} catch (error) {
 			logger(error)
+			this.setIdle()
 			return
 		}
 		const body: ApiResponse<User> = await res.json()
