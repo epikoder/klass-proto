@@ -3,9 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
-    MYSQL_DATABASE: "klass",
-    MYSQL_USER: "root",
-    MYSQL_PASSWORD: "beLL1923"
+    MYSQL_DATABASE: process.env.MYSQL_DATABASE ?? "klass",
+    MYSQL_USER: process.env.MYSQL_USER ?? "root",
+    MYSQL_PASSWORD: process.env.MYSQL_PASSWORD ?? ""
   }
 }
 
