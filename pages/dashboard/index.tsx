@@ -7,6 +7,7 @@ import { DashboardBloc, useDashboardBloc } from "../../bloc/dashboard.bloc"
 const Dashboard = () => {
 	const [{ subjects, selected }, { load, addSelected, removeSelected }] = useDashboardBloc(DashboardBloc)
 	const [{ user, authenticated }] = useAuthBloc(AuthBloc)
+
 	useEffect(() => {
 		if (authenticated) load(user!)
 	}, [user, authenticated])
@@ -40,7 +41,7 @@ const Dashboard = () => {
 				<div className="p-4 flex justify-center">
 					{subjects !== undefined ? <div className="flex flex-wrap">
 						{subjects.map((e => <div
-							key={e.name}
+							key={e.id}
 							className={`shadow-md m-1 p-2 bg-gray-100 ${selected?.includes(e) ? 'bg-gray-200' : 'bg-gray-100'} hover:bg-gray-200 rounded-md ${selected!.length < 4 && !selected!.includes(e) ? 'cursor-pointer' : 'cursor-not-allowed'}`}
 							onClick={!selected!.includes(e) ? () => addSelected(e) : undefined}>
 							{e.name}
@@ -53,7 +54,7 @@ const Dashboard = () => {
 				</div>
 				<div className="p-4 flex flex-wrap">
 					{selected!.map((e => <div
-						key={e.name}
+						key={e.id}
 						className="shadow-md m-1 p-2 bg-green-500 rounded text-white cursor-pointer"
 						onClick={() => removeSelected(e)}>
 						{e.name}

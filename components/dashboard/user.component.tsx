@@ -1,4 +1,4 @@
-import { Avatar, Button, ModalDialog } from "@mui/joy"
+import { Avatar, Button, CircularProgress, ModalDialog } from "@mui/joy"
 import { useRouter } from "next/router"
 import { FC, useEffect, useState } from "react"
 import User from "../../models/user.model"
@@ -14,6 +14,7 @@ const DashboardUserComponent: FC<User> = (props) => {
 	const [open, _setOpen] = useState(false)
 	const toggleOpen = () => _setOpen(!open)
 	const [{ }, { logout }] = useAuthBloc(AuthBloc)
+	const [loading, setLoading] = useState(false)
 
 	const { username, fname, lname } = props
 
@@ -25,7 +26,7 @@ const DashboardUserComponent: FC<User> = (props) => {
 	}, [time])
 
 	const _submit = () => {
-		toggleOpen()
+		setLoading(true)
 		endTimer()
 		__onSubmit()
 	}
@@ -60,6 +61,7 @@ const DashboardUserComponent: FC<User> = (props) => {
 				</Button>
 				<Button
 					fullWidth
+					startDecorator={loading && <CircularProgress size="sm" />}
 					onClick={_submit}>
 					SUBMIT
 				</Button>

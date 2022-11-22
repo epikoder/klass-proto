@@ -4,12 +4,14 @@ import { ApiResponse } from "../models/api.model";
 import { QuestionInterface, QuestionResult } from "../models/question.model";
 import { SubjectInterface } from "../models/subject.model";
 import User from "../models/user.model";
+import logger from "../utils/logger";
 
 
 interface ExamState {
     questions?: QuestionResult[]
     current?: QuestionResult
     current_index?: number
+    loading?: boolean
 }
 
 interface QuestionSub extends SubjectInterface {
@@ -21,7 +23,12 @@ export class ExamBloc extends Cubit<ExamState> {
         super({})
     }
 
+    setLoading = () => this.emit({ ...this.state, loading: true })
+    setIdle = () => this.emit({ ...this.state, loading: false })
+
     load = async (selected: SubjectInterface[]): Promise<void> => {
+        if (this.state.loading === true) return
+        this.setLoading()
         try {
             const res = await fetch('/api/exam', {
                 method: 'POST',
@@ -36,6 +43,7 @@ export class ExamBloc extends Cubit<ExamState> {
             const s: QuestionSub[] = []
             selected?.forEach((e, key) => {
                 s.push({ ...e, questions: [] })
+                console.log(e.name, e.id)
                 data_.data?.forEach(q => {
                     if (q.subject_id === e.id) {
                         s[key].questions.push({ question: q, answer: '' })
@@ -45,15 +53,17 @@ export class ExamBloc extends Cubit<ExamState> {
             s.forEach(e => {
                 sortedQuestion = sortedQuestion.concat(e.questions)
             })
+            logger(sortedQuestion, 'SORTED')
             const state: ExamState = { questions: sortedQuestion }
             if (sortedQuestion !== undefined && sortedQuestion.length > 0) {
                 state.current = sortedQuestion[0];
                 state.current_index = 0
             }
-            this.emit(state)
+            this.emit({ ...state })
         } catch (error) {
             console.log(error)
         }
+        this.setIdle()
     }
 
     canNext = () => this.state.questions !== undefined ? this.state.questions?.length > this.state.current_index! + 1 : false

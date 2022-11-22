@@ -7,8 +7,8 @@ import logger from '../../utils/logger';
 interface LoginData { username: string, password: string }
 export default async function login(req: NextApiRequest,
 	res: NextApiResponse<ApiResponse<User>>) {
+	let body: LoginData
 	try {
-		let body: LoginData
 		try {
 			body = JSON.parse(req.body)
 		} catch (error) {

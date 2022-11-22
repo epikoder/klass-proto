@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { FC, ReactNode, useEffect } from "react";
+import { FC, ReactNode, useEffect, useRef } from "react";
 import { AuthBloc, AuthState, useAuthBloc } from "../bloc/auth.bloc";
 import DashboardUserComponent from "../components/dashboard/user.component";
 import DashboardHeader from "../components/header.component";
@@ -8,10 +8,14 @@ import LayoutApp from "./app.layout";
 const DashboardLayout: FC<{ children: (props: AuthState & {}) => ReactNode }> = (props) => {
 	const [auth] = useAuthBloc(AuthBloc)
 	const router = useRouter()
+	const timer_ = useRef<ReturnType<typeof setTimeout>>()
 
 	useEffect(() => {
 		if (!auth.authenticated) {
-			router.replace('/')
+			timer_.current = setTimeout(() => {
+				if (auth.authenticated) return clearTimeout(timer_.current)
+				router.replace('/')
+			}, 1000)
 		}
 	}, [auth.authenticated])
 

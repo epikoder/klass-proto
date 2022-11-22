@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ApiResponse } from '../../models/api.model';
 import { SubjectInterface } from '../../models/subject.model';
-import { query } from '../../utils/db'
+import  { query } from '../../utils/db'
 import logger from '../../utils/logger';
 import { DashboardState } from '../../bloc/dashboard.bloc';
 
@@ -14,7 +14,7 @@ export default async function dashboard(req: NextApiRequest,
 			data: {
 				subjects: result
 			}
-		})
+		}) 
 	} catch (e) {
 		logger(e)
 		res.statusCode = 500
