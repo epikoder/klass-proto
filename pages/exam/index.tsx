@@ -33,7 +33,7 @@ const Exam: FC = () => {
                         <div>
                             <div className='space-x-2'>
                                 <span>{current_index! + 1}. </span>
-                                <span dangerouslySetInnerHTML={{ __html: current?.question.question ?? '' }}></span>
+                                <span dangerouslySetInnerHTML={{ __html: current?.question.question ?? '' }} />
                             </div>
                             <div
                                 className='space-y-4 py-4'>
@@ -42,28 +42,28 @@ const Exam: FC = () => {
                                     <Checkbox
                                         checked={current?.answer === 'option_1'}
                                         onChange={() => onSelect('option_1')} />
-                                    <span>A</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_1 }}> </span>
+                                    <span>A</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_1 ?? '' }} />
                                 </div>
                                 <div
                                     className='flex items-center space-x-2'>
                                     <Checkbox
                                         checked={current?.answer === 'option_2'}
                                         onChange={() => onSelect('option_2')} />
-                                    <span>B</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_2 }}> </span>
+                                    <span>B</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_2 ?? '' }} />
                                 </div>
                                 <div
                                     className='flex items-center space-x-2'>
                                     <Checkbox
                                         checked={current?.answer === 'option_3'}
                                         onChange={() => onSelect('option_3')} />
-                                    <span>C</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_3 }}> </span>
+                                    <span>C</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_3 ?? '' }} />
                                 </div>
                                 <div
                                     className='flex items-center space-x-2'>
                                     <Checkbox
                                         checked={current?.answer === 'option_4'}
                                         onChange={() => onSelect('option_4')} />
-                                    <span>D</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_4 }}> </span>
+                                    <span>D</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_4 ?? '' }} />
                                 </div>
                             </div>
                         </div>

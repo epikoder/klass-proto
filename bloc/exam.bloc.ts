@@ -1,10 +1,8 @@
 import { BlacReact, Cubit } from "blac";
-import { NextRouter } from "next/router";
 import { ApiResponse } from "../models/api.model";
 import { QuestionInterface, QuestionResult } from "../models/question.model";
 import { SubjectInterface } from "../models/subject.model";
 import User from "../models/user.model";
-import logger from "../utils/logger";
 
 
 interface ExamState {
@@ -43,7 +41,6 @@ export class ExamBloc extends Cubit<ExamState> {
             const s: QuestionSub[] = []
             selected?.forEach((e, key) => {
                 s.push({ ...e, questions: [] })
-                console.log(e.name, e.id)
                 data_.data?.forEach(q => {
                     if (q.subject_id === e.id) {
                         s[key].questions.push({ question: q, answer: '' })
@@ -53,7 +50,6 @@ export class ExamBloc extends Cubit<ExamState> {
             s.forEach(e => {
                 sortedQuestion = sortedQuestion.concat(e.questions)
             })
-            logger(sortedQuestion, 'SORTED')
             const state: ExamState = { questions: sortedQuestion }
             if (sortedQuestion !== undefined && sortedQuestion.length > 0) {
                 state.current = sortedQuestion[0];
