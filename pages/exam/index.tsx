@@ -44,28 +44,28 @@ const Exam: FC = () => {
                                     <Checkbox
                                         checked={current?.answer === 'option_1'}
                                         onChange={() => onSelect('option_1')} />
-                                    <span>A</span> <span>{current?.question.option_1} </span>
+                                    <span>A</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_1 }}> </span>
                                 </div>
                                 <div
                                     className='flex items-center space-x-2'>
                                     <Checkbox
                                         checked={current?.answer === 'option_2'}
                                         onChange={() => onSelect('option_2')} />
-                                    <span>B</span> <span>{current?.question.option_2} </span>
+                                    <span>B</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_2 }}> </span>
                                 </div>
                                 <div
                                     className='flex items-center space-x-2'>
                                     <Checkbox
                                         checked={current?.answer === 'option_3'}
                                         onChange={() => onSelect('option_3')} />
-                                    <span>C</span> <span>{current?.question.option_3} </span>
+                                    <span>C</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_3 }}> </span>
                                 </div>
                                 <div
                                     className='flex items-center space-x-2'>
                                     <Checkbox
                                         checked={current?.answer === 'option_4'}
                                         onChange={() => onSelect('option_4')} />
-                                    <span>D</span> <span>{current?.question.option_4} </span>
+                                    <span>D</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_4 }}> </span>
                                 </div>
                             </div>
                         </div>
