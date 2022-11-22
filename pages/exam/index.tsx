@@ -16,10 +16,8 @@ const Exam: FC = () => {
     const toggleBox = () => setBoxIsOpen(!boxIsOpen)
 
     useEffect(() => {
-        if (!loading && (questions === undefined) && selected !== undefined) {
-            load(selected!)
-        }
-    }, [questions, selected])
+        if (selected !== undefined) load(selected!)
+    }, [questions, selected, loading])
 
     useEffect(() => {
         if (!loading && current !== undefined) {

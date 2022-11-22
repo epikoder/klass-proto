@@ -27,7 +27,7 @@ export class ExamBloc extends Cubit<ExamState> {
     setIdle = () => this.emit({ ...this.state, loading: false })
 
     load = async (selected: SubjectInterface[]): Promise<void> => {
-        if (this.state.loading === true) return
+        if (this.state.loading === true || (this.state.questions !== undefined && this.state.questions?.length > 0)) return
         this.setLoading()
         try {
             const res = await fetch('/api/exam', {
