@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ApiResponse } from '../../models/api.model';
-import { QuestionInterfaceWithAnswer } from '../../models/question.model';
+import { QuestionWithAnswerInterface } from '../../models/question.model';
 import User from '../../models/user.model';
 import { query } from '../../utils/db'
 import logger from '../../utils/logger';
@@ -16,7 +16,7 @@ export default async function submit(req: NextApiRequest,
         }
         const ids = body.map(e => parseInt(Object.keys(e)[0]))
 
-        let result = await query()('SELECT * FROM questions WHERE id IN (?)', [ids]) as Array<QuestionInterfaceWithAnswer>
+        let result = await query()('SELECT * FROM questions WHERE id IN (?)', [ids]) as Array<QuestionWithAnswerInterface>
 
         let score = 0
         result.forEach(q => {

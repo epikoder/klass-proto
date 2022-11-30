@@ -1,107 +1,84 @@
-import { Button, Checkbox, CircularProgress, IconButton } from '@mui/joy'
-import { FC, useEffect, useState } from 'react'
+import { Button, CircularProgress } from '@mui/joy'
+import { FC, useEffect, useRef } from 'react'
 import DashboardLayout from "../../layout/dashboard.layout"
 import { DashboardBloc, useDashboardBloc } from '../../bloc/dashboard.bloc'
-import { ExamBloc, ExamTimer, useExamBloc, useExamTimer } from '../../bloc/exam.bloc'
-import QuestionSelection from '../../components/exam/questions.selection.component'
-import { ArrowUpwardRounded } from '@mui/icons-material'
+import { ExamBloc, useExamBloc } from '../../bloc/exam.bloc'
+import { getOption } from '../../utils/helper'
+
 
 const Exam: FC = () => {
-    const [{ selected }] = useDashboardBloc(DashboardBloc)
-    const [{ current, current_index, questions, loading },
-        { load, canNext, canPrev, onNext, onPrev, onNavigate, onSelect }
-    ] = useExamBloc(ExamBloc)
-    const [{ }, { startTimer }] = useExamTimer(ExamTimer)
-    const [boxIsOpen, setBoxIsOpen] = useState(false)
-    const toggleBox = () => setBoxIsOpen(!boxIsOpen)
+    const [{ topics }] = useDashboardBloc(DashboardBloc)
+    const [{ questions, loading }, { load }] = useExamBloc(ExamBloc)
 
     useEffect(() => {
-        if (selected !== undefined) load(selected!)
-    }, [questions, selected, loading])
-
-    useEffect(() => {
-        if (!loading && current !== undefined) {
-            startTimer()
+        if (topics !== undefined && topics.length > 0) {
+            load(topics!)
         }
-    }, [questions, current])
+    }, [topics])
 
     return <DashboardLayout>
         {() => (loading === undefined || !loading) ?
             <div className='w-full p-4  overflow-scroll space-y-10 h-full'>
-                {current !== undefined &&
-                    <div className='p-4 md:p-6'>
-                        <div>
-                            <div className='space-x-2'>
-                                <span>{current_index! + 1}. </span>
-                                <span dangerouslySetInnerHTML={{ __html: current?.question.question ?? '' }} />
-                            </div>
-                            <div
-                                className='space-y-4 py-4'>
-                                <div
-                                    className='flex items-center space-x-2'>
-                                    <Checkbox
-                                        checked={current?.answer === 'option_1'}
-                                        onChange={() => onSelect('option_1')} />
-                                    <span>A</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_1 ?? '' }} />
-                                </div>
-                                <div
-                                    className='flex items-center space-x-2'>
-                                    <Checkbox
-                                        checked={current?.answer === 'option_2'}
-                                        onChange={() => onSelect('option_2')} />
-                                    <span>B</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_2 ?? '' }} />
-                                </div>
-                                <div
-                                    className='flex items-center space-x-2'>
-                                    <Checkbox
-                                        checked={current?.answer === 'option_3'}
-                                        onChange={() => onSelect('option_3')} />
-                                    <span>C</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_3 ?? '' }} />
-                                </div>
-                                <div
-                                    className='flex items-center space-x-2'>
-                                    <Checkbox
-                                        checked={current?.answer === 'option_4'}
-                                        onChange={() => onSelect('option_4')} />
-                                    <span>D</span> <span dangerouslySetInnerHTML={{ __html: current?.question.option_4 ?? '' }} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className='flex justify-between px-6'>
-                            <Button
-                                disabled={!canPrev()}
-                                onClick={onPrev}>
-                                BACK
-                            </Button>
-                            <Button
-                                disabled={!canNext()}
-                                onClick={onNext}>
-                                NEXT
-                            </Button>
-                        </div>
+                {
+                    (questions !== undefined) &&
+                    <div className='bg-gray-500 p-4 space-y-4 text-black'>
+                        {
+                            Object.keys(questions).map((e, key) =>
+                                <div key={key} className='bg-white py-4 px-2 space-y-4'>
+                                    <div id={e + '-question'}>
+                                        <div className='text-center'>
+                                            <div className='font-bold text-lg'>
+                                                Prep50 College
+                                            </div>
+                                            <div className='flex justify-between'>
+                                                <span>
+                                                    First Term Examination
+                                                </span>
+                                                <span className='font-bold'>
+                                                    Duration: 2hr 30min
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            Paper Type <span className='font-bold'>{e}</span>
+                                        </div>
+                                        <ol type='1' className='pt-4 space-y-1'>
+                                            {questions[e].question.map((q, i) =>
+                                                <li key={i} style={{
+                                                    listStyleType: 'decimal',
+                                                }}>
+                                                    <span dangerouslySetInnerHTML={{ __html: q.question }} />
+                                                    <span className='mx-2'>
+                                                        [A]<span className='mx-2' dangerouslySetInnerHTML={{ __html: q.option_1 }} />
+                                                        [B]<span className='mx-2' dangerouslySetInnerHTML={{ __html: q.option_2 }} />
+                                                        [C]<span className='mx-2' dangerouslySetInnerHTML={{ __html: q.option_3 }} />
+                                                        [D]<span className='mx-2' dangerouslySetInnerHTML={{ __html: q.option_4 }} />
+                                                    </span>
+                                                </li>)
+                                            }
+                                        </ol>
+                                    </div>
+                                    <hr />
+                                    <div id={e + '-answer'}>
+                                        <div className='text-center'>
+                                            Paper Type <span className='font-bold'>{e}</span> Answers
+                                        </div>
+                                        <ol type='1' className='space-y-2 pt-4 text-left' style={{
+                                            columns: 3
+                                        }}>
+                                            {questions[e].answer.map((a, i) =>
+                                                <li key={i} style={{
+                                                    listStyleType: 'decimal',
+                                                }}>
+                                                    {getOption(a)}
+                                                </li>)
+                                            }
+                                        </ol>
+                                    </div>
+                                </div>)
+                        }
                     </div>
                 }
-                <div className='md:hidden fixed bottom-5 right-5'>
-                    <IconButton size='sm' onClick={toggleBox}>
-                        <ArrowUpwardRounded sx={{
-                            color: 'white'
-                        }} />
-                    </IconButton>
-                </div>
-                <div className='md:block hidden'>
-                    <QuestionSelection {...{ current, current_index, questions }} onClick={onNavigate} />
-                </div>
-                <div className='md:hidden fixed top-0 bottom-0 left-0 right-0 z-10' style={{
-                    backgroundColor: '#00000012',
-                    display: boxIsOpen ? 'block' : 'none'
-                }} onClick={toggleBox}>
-                    <div className='p-4 rounded-t-2xl bg-white bottom-0 absolute'>
-                        <QuestionSelection {...{ current, current_index, questions }} onClick={(index) => {
-                            toggleBox()
-                            onNavigate(index)
-                        }} />
-                    </div>
-                </div>
             </div> : <div className='flex flex-col items-center justify-center h-40 w-full'>
                 <CircularProgress />
             </div>}

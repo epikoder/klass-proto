@@ -2,17 +2,19 @@ import { BlacReact, Cubit } from "blac";
 import { NextRouter } from "next/router";
 import { ApiResponse } from "../models/api.model";
 import { SubjectInterface } from "../models/subject.model";
+import { TopicInterface } from "../models/topic.model";
 import User from "../models/user.model";
 import logger from "../utils/logger";
 
 export interface DashboardState {
-	subjects?: SubjectInterface[],
-	selected?: SubjectInterface[],
+	subjects?: SubjectInterface[]
+	selected?: SubjectInterface
+	topics?: TopicInterface[]
 }
 
 export class DashboardBloc extends Cubit<DashboardState> {
 	constructor() {
-		super({ selected: [] })
+		super({})
 	}
 
 	load = async (user: User): Promise<void> => {
@@ -30,23 +32,41 @@ export class DashboardBloc extends Cubit<DashboardState> {
 		}
 	}
 
-	addSelected = (s: SubjectInterface) => {
-		if (this.state.selected!.length >= 4 || this.state.selected!.includes(s)) return
-		const sub = this.state.subjects?.find((e) => e.name == s.name)
-		if (sub !== undefined) {
-			this.emit({ ...this.state, selected: this.state.selected!.concat(sub) })
+	toggleSelect = (s: SubjectInterface) => {
+		this.emit({ ...this.state, selected: s, topics: [] })
+	}
+
+	allSelected = (): boolean => {
+		if (this.state.topics === undefined || this.state.selected === undefined || this.state.topics.length === 0) return false
+		for (let i = 0; i < this.state.selected?.topics?.length!; i++) {
+			if (!this.state.topics.includes(this.state.selected.topics![i])) {
+				return false
+			}
+		}
+		return true
+	}
+	selectAllTopics = () => {
+		if (this.allSelected()) return this.emit({ ...this.state, topics: [] })
+		this.emit({ ...this.state, topics: this.state.selected?.topics })
+	}
+
+	addTopics = (t: TopicInterface) => {
+		if (this.state.topics!.includes(t)) return
+		const topic = this.state.selected?.topics?.find((e) => e.title === t.title)
+		if (topic !== undefined) {
+			this.emit({ ...this.state, topics: this.state.topics?.concat(topic) })
 		}
 	}
 
-	removeSelected = (s: SubjectInterface) => {
+	removeTopic = (t: TopicInterface) => {
 		let index!: number
-		for (let i = 0; i < this.state.selected!.length; i++) {
-			if (this.state.selected![i].name === s.name) {
+		for (let i = 0; i < this.state.topics?.length!; i++) {
+			if (this.state.topics![i].title === t.title) {
 				index = i;
 			}
 		}
 		if (index !== undefined) {
-			this.emit({ ...this.state, selected: this.state.selected!.slice(0, index).concat(this.state.selected!.slice(index + 1)) })
+			this.emit({ ...this.state, topics: this.state.topics!.slice(0, index).concat(this.state.topics!.slice(index + 1)) })
 		}
 	}
 
@@ -55,7 +75,7 @@ export class DashboardBloc extends Cubit<DashboardState> {
 	}
 
 	clearSelection = () => {
-		this.emit({ selected: [] })
+		this.emit({ selected: undefined })
 	}
 }
 export const { useBloc: useDashboardBloc } = new BlacReact([new DashboardBloc()])

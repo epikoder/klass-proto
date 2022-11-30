@@ -1,6 +1,7 @@
 export interface QuestionInterface {
     id: number
     subject_id: number
+    topic_id: number
     source_id: number
     question_type_id: number
     question: string
@@ -12,7 +13,7 @@ export interface QuestionInterface {
     option_4: string
 }
 
-export interface QuestionInterfaceWithAnswer extends QuestionInterface {
+export interface QuestionWithAnswerInterface extends QuestionInterface {
     short_answer: string
     full_answer: string
     answer_image: string
@@ -20,8 +21,8 @@ export interface QuestionInterfaceWithAnswer extends QuestionInterface {
 }
 
 export interface QuestionResult {
-    question: QuestionInterface
-    answer: string
+    question: QuestionWithAnswerInterface[]
+    answer: string[]
 }
 
 export default class Question { }
